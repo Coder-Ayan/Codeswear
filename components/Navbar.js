@@ -3,6 +3,7 @@ import Link from 'next/link';
 import React, { useRef } from 'react'
 import { AiOutlineShoppingCart, AiOutlineCloseCircle, AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import { BsFillBagCheckFill } from 'react-icons/bs';
+import { FaTrashAlt } from 'react-icons/fa';
 
 const Navbar = () => {
     const Cart = useRef()
@@ -88,7 +89,10 @@ const Navbar = () => {
                         </div>
                     </li>
                 </ol>
-                <button className="flex mt-10 text-white bg-pink-500 border-0 py-2 px-5 focus:outline-none hover:bg-pink-600 rounded text-base"><BsFillBagCheckFill className="m-1"/> Checkout</button>
+                <div className="flex mt-10 -mx-4 space-x-4">
+                    <button className="flex items-center text-white bg-pink-500 border-0 py-2 px-2 md:px-5 focus:outline-none hover:bg-pink-600 rounded text-sm md:text-base leading-none"><BsFillBagCheckFill className="m-1" />Checkout</button>
+                    <button className="flex items-center text-pink-500 hover:text-white border border-pink-500 py-2 px-2 md:px-5 focus:outline-none hover:bg-pink-500 rounded text-sm md:text-base leading-none"><FaTrashAlt className="m-1" />Clear Cart</button>
+                </div>
             </div>
         </div >
     )
