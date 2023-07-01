@@ -2,8 +2,12 @@ import '../styles/globals.css'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router';
 
 function MyApp({ Component, pageProps }) {
+	const router = useRouter();
+	const showHeaderAndFooter = ['/login', '/signup', '/forgotpassword'].includes(router.pathname) ? false : true;
+
 	const [cart, setCart] = useState({})
 	const [subTotal, setSubTotal] = useState(0)
 
@@ -66,11 +70,11 @@ function MyApp({ Component, pageProps }) {
 
 	return (
 		<>
-			<Navbar cart={cart} addToCart={addToCart} removeFromCart={removeFromCart}
-				clearCart={clearCart} subTotal={subTotal} />
+			{showHeaderAndFooter && <Navbar cart={cart} addToCart={addToCart} removeFromCart={removeFromCart}
+				clearCart={clearCart} subTotal={subTotal} />}
 			<Component {...pageProps} cart={cart} addToCart={addToCart} removeFromCart={removeFromCart}
 				clearCart={clearCart} subTotal={subTotal} />
-			<Footer />
+			{showHeaderAndFooter && <Footer />}
 		</>
 	)
 }

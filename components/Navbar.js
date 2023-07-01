@@ -4,6 +4,7 @@ import React, { useRef } from 'react'
 import { AiOutlineShoppingCart, AiOutlineCloseCircle, AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 import { BsFillBagCheckFill } from 'react-icons/bs';
 import { FaTrashAlt } from 'react-icons/fa';
+import { MdLogin } from 'react-icons/md';
 
 const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
     const Cart = useRef()
@@ -31,7 +32,8 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
                     <Link href="/mugs"><li>Mugs</li></Link>
                 </ul>
             </div>
-            <div className="cart absolute right-0 top-4 mx-5">
+            <div className="flex absolute right-0 top-6 md:top-4 mx-3 md:mx-5">
+                <Link href="/login"><MdLogin className="cursor-pointer text-xl md:text-3xl text-pink-500 mr-2" /></Link>
                 <AiOutlineShoppingCart onClick={toggleCart} className="cursor-pointer text-xl md:text-3xl text-pink-500" />
             </div>
             <div ref={Cart} className={`sideCart fixed top-0 right-0 bg-pink-50 py-10 px-8 w-[18rem] sm:w-[22rem] h-screen rounded transform transition-transform ${Object.keys(cart).length === 0 ? 'translate-x-full' : 'translate-x-0'}`}>
