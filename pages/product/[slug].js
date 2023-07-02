@@ -12,7 +12,7 @@ const Slug = ({ addToCart }) => {
     }
 
     const checkServiceability = async () => {
-        let response = await fetch("http://192.168.0.103:3000/api/pincode")
+        let response = await fetch("http://localhost:3000/api/pincode")
         let pins = await response.json()
 
         if (pins.includes(parseInt(pin))) {

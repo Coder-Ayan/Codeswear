@@ -1,4 +1,3 @@
-import React from 'react'
 import { HiMiniTrash } from 'react-icons/hi2';
 import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
 
@@ -103,10 +102,10 @@ const checkout = ({ cart, addToCart, removeFromCart, subTotal }) => {
                                 Subtotal <span className="ml-2">&#8377;{subTotal}</span>
                             </div>
                             <div className="flex items-center justify-between w-full py-4 text-base font-medium text-gray-600lg:py-5 lg:px-3 text-heading">
-                                Shipping Tax <span className="ml-2">&#8377;50</span>
+                                Shipping Tax <span className="ml-2">&#8377;{Object.keys(cart).length !== 0 ? 50 : 0}</span>
                             </div>
                             <div className="flex items-center justify-between w-full py-4 mt-2 text-lg font-semibold border-t border-gray-300 lg:py-5 lg:px-3">
-                                Total <span className="ml-2">&#8377;549</span>
+                                Total <span className="ml-2">&#8377;{subTotal + (Object.keys(cart).length !== 0 ? 50 : 0)}</span>
                             </div>
                         </div>
                     </div>

@@ -1,5 +1,3 @@
-import React from 'react'
-
 const order = () => {
     return (
         <section className="text-gray-600 body-font overflow-hidden">
