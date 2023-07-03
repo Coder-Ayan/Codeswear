@@ -40,12 +40,12 @@ function MyApp({ Component, pageProps }) {
 		saveSubTotal(newCart)
 	}
 
-	const addToCart = (itemCode, name, price, quantity, size, variant) => {
+	const addToCart = (itemCode, name, image, price, quantity, size, variant) => {
 		let newCart = cart
 		if (itemCode in cart) {
 			newCart[itemCode].quantity += quantity
 		} else {
-			newCart[itemCode] = { name, price, quantity, size, variant }
+			newCart[itemCode] = { name, image, price, quantity, size, variant }
 		}
 		setCart(newCart)
 		saveCart(newCart)

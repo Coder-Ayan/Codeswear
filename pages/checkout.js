@@ -71,7 +71,7 @@ const checkout = ({ cart, addToCart, removeFromCart, subTotal }) => {
                                             return (
                                                 <div key={itemCode} className="flex p-2 md:p-4 border rounded-md">
                                                     <div className="w-2/6">
-                                                        <img src="https://m.media-amazon.com/images/I/61K4wziiNhL._UX679_.jpg" alt="image" className="max-h-36 rounded mx-auto" />
+                                                        <img src={item.image} alt="image" className="max-h-36 rounded mx-auto" />
                                                     </div>
                                                     <div className="w-4/6 pl-4 flex flex-col justify-between">
                                                         <div>
@@ -86,7 +86,7 @@ const checkout = ({ cart, addToCart, removeFromCart, subTotal }) => {
                                                         <div className="flex items-center justify-center text-lg space-x-1 ml-auto">
                                                             <AiFillMinusCircle onClick={() => removeFromCart(itemCode, 1)} className="cursor-pointer text-pink-500" />
                                                             <span className="quantity font-semibold">{item.quantity}</span>
-                                                            <AiFillPlusCircle onClick={() => addToCart(itemCode, item.name, item.price, 1, item.size, item.variant)} className="cursor-pointer text-pink-500" />
+                                                            <AiFillPlusCircle onClick={() => addToCart(itemCode, item.name, item.image, item.price, 1, item.size, item.variant)} className="cursor-pointer text-pink-500" />
                                                         </div>
                                                     </div>
                                                 </div>

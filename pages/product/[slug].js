@@ -1,7 +1,9 @@
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+import mongoose from 'mongoose'
+import Product from '../../models/Product'
 
-const Slug = ({ addToCart }) => {
+const Slug = ({ addToCart, product, variants }) => {
     const router = useRouter()
     const { slug } = router.query
     const [pin, setPin] = useState('')
@@ -21,17 +23,32 @@ const Slug = ({ addToCart }) => {
         else setServiceable(false)
     }
 
+    const [color, setColor] = useState(product.color)
+    const [size, setSize] = useState(product.size)
+
+    const refreshVariant = (newcolor, newsize) => {
+        let url
+        if (variants[newcolor][newsize]) {
+            url = `http://localhost:3000/product/${variants[newcolor][newsize].slug}`
+        } else {
+            url = `http://localhost:3000/product/${variants[newcolor][Object.keys(variants[newcolor])[0]].slug}`
+        }
+
+        window.location = url
+    }
+
     return (
         <section className="text-gray-600 body-font overflow-hidden">
             <div className="container px-5 py-16 mx-auto">
                 <div className="lg:w-5/6 mx-auto flex flex-wrap">
                     <div className="lg:w-1/2 w-full">
-                        <img alt="ecommerce" className="h-80 sm:h-[32rem] mx-auto object-center rounded" src="https://m.media-amazon.com/images/I/61K4wziiNhL._UX679_.jpg" />
+                        <img alt="ecommerce" className="h-80 sm:h-[32rem] mx-auto object-center rounded" src={product.image} />
                     </div>
                     <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
                         <h2 className="text-sm title-font text-gray-500 tracking-widest">CODESWEAR</h2>
-                        <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">Wear the code</h1>
-                        <div className="flex mb-4">
+                        <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{product.title} ({size}/{color})</h1>
+
+                        {/* <div className="flex mb-4">
                             <span className="flex items-center">
                                 <svg fill="currentColor" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} className="w-4 h-4 text-pink-500" viewBox="0 0 24 24">
                                     <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
@@ -67,23 +84,30 @@ const Slug = ({ addToCart }) => {
                                     </svg>
                                 </a>
                             </span>
-                        </div>
-                        <p className="leading-relaxed">Fam locavore kickstarter distillery. Mixtape chillwave tumeric sriracha taximy chia microdosing tilde DIY. XOXO fam indxgo juiceramps cornhole raw denim forage brooklyn. Everyday carry +1 seitan poutine tumeric. Gastropub blue bottle austin listicle pour-over, neutra jean shorts keytar banjo tattooed umami cardigan.</p>
+                        </div> */}
+
+                        <p className="leading-relaxed mt-4">{product.description}</p>
                         <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
                             <div className="flex">
                                 <span className="mr-3">Color</span>
-                                <button className="border-2 border-gray-300 rounded-full w-6 h-6 focus:outline-none" />
-                                <button className="border-2 border-gray-300 ml-1 bg-gray-700 rounded-full w-6 h-6 focus:outline-none" />
-                                <button className="border-2 border-gray-300 ml-1 bg-pink-500 rounded-full w-6 h-6 focus:outline-none" />
+                                {Object.keys(variants).includes('white') && <button onClick={() => refreshVariant('white', size)} className={`border-2 bg-white rounded-full w-6 h-6 focus:outline-none ${color === 'white' ? 'border-black' : 'border-gray-300'}`} />}
+                                {Object.keys(variants).includes('black') && <button onClick={() => refreshVariant('black', size)} className={`border-2 ml-1 bg-black rounded-full w-6 h-6 focus:outline-none ${color === 'black' ? 'border-black' : 'border-gray-300'}`} />}
+                                {Object.keys(variants).includes('red') && <button onClick={() => refreshVariant('red', size)} className={`border-2 ml-1 bg-red-600 rounded-full w-6 h-6 focus:outline-none ${color === 'red' ? 'border-black' : 'border-gray-300'}`} />}
+                                {Object.keys(variants).includes('blue') && <button onClick={() => refreshVariant('blue', size)} className={`border-2 ml-1 bg-blue-600 rounded-full w-6 h-6 focus:outline-none ${color === 'blue' ? 'border-black' : 'border-gray-300'}`} />}
+                                {Object.keys(variants).includes('green') && <button onClick={() => refreshVariant('green', size)} className={`border-2 ml-1 bg-green-600 rounded-full w-6 h-6 focus:outline-none ${color === 'green' ? 'border-black' : 'border-gray-300'}`} />}
+                                {Object.keys(variants).includes('yellow') && <button onClick={() => refreshVariant('yellow', size)} className={`border-2 ml-1 bg-yellow-600 rounded-full w-6 h-6 focus:outline-none ${color === 'yellow' ? 'border-black' : 'border-gray-300'}`} />}
+                                {Object.keys(variants).includes('purple') && <button onClick={() => refreshVariant('purple', size)} className={`border-2 ml-1 bg-purple-600 rounded-full w-6 h-6 focus:outline-none ${color === 'purple' ? 'border-black' : 'border-gray-300'}`} />}
                             </div>
                             <div className="flex ml-6 items-center">
                                 <span className="mr-3">Size</span>
                                 <div className="relative">
-                                    <select className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-500 text-base pl-3 pr-10">
-                                        <option>SM</option>
-                                        <option>M</option>
-                                        <option>L</option>
-                                        <option>XL</option>
+                                    <select value={size} onChange={(e) => refreshVariant(color, e.target.value)} className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-pink-200 focus:border-pink-500 text-base pl-3 pr-10">
+                                        {Object.keys(variants[color]).includes('XS') && <option>XS</option>}
+                                        {Object.keys(variants[color]).includes('S') && <option>S</option>}
+                                        {Object.keys(variants[color]).includes('M') && <option>M</option>}
+                                        {Object.keys(variants[color]).includes('L') && <option>L</option>}
+                                        {Object.keys(variants[color]).includes('XL') && <option>XL</option>}
+                                        {Object.keys(variants[color]).includes('XXL') && <option>XXL</option>}
                                     </select>
                                     <span className="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
                                         <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} className="w-4 h-4" viewBox="0 0 24 24">
@@ -96,7 +120,7 @@ const Slug = ({ addToCart }) => {
                         <div className="flex items-center">
                             <span className="title-font font-medium text-2xl text-gray-900">&#8377;499</span>
                             <button className="flex items-center ml-auto xl:ml-20 text-white bg-pink-500 border-0 py-1.5 md:py-2 px-2 md:px-6 focus:outline-none hover:bg-pink-600 rounded text-sm md:text-base">Buy Now</button>
-                            <button onClick={() => addToCart(slug, "Wear the code", 499, 1, "XL", "Black")} className="flex items-center ml-2 xl:ml-4 text-white bg-pink-500 border-0 py-1.5 md:py-2 px-2 md:px-6 focus:outline-none hover:bg-pink-600 rounded text-sm md:text-base">Add to Cart</button>
+                            <button onClick={() => addToCart(slug, product.title, product.image, product.price, 1, size, color)} className="flex items-center ml-2 xl:ml-4 text-white bg-pink-500 border-0 py-1.5 md:py-2 px-2 md:px-6 focus:outline-none hover:bg-pink-600 rounded text-sm md:text-base">Add to Cart</button>
                             <button className="rounded-full w-9 md:w-10 h-9 md:h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-2 xl:ml-4">
                                 <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} className="w-5 h-5" viewBox="0 0 24 24">
                                     <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
@@ -126,6 +150,27 @@ const Slug = ({ addToCart }) => {
             </div>
         </section>
     )
+}
+
+export async function getServerSideProps(context) {
+    if (!mongoose.connections[0].readyState) {
+        await mongoose.connect(process.env.MONGO_URI);
+    }
+
+    let product = await Product.findOne({ slug: context.query.slug })
+    let variants = await Product.find({ title: product.title })
+    let colorSizeSlug = {}
+
+    for (const item of variants) {
+        if (Object.keys(colorSizeSlug).includes(item.color)) {
+            colorSizeSlug[item.color][item.size] = { slug: item.slug }
+        } else {
+            colorSizeSlug[item.color] = {}
+            colorSizeSlug[item.color][item.size] = { slug: item.slug }
+        }
+    }
+
+    return { props: { product: JSON.parse(JSON.stringify(product)), variants: colorSizeSlug } }
 }
 
 export default Slug

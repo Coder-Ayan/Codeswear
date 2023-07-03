@@ -26,10 +26,10 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
             </div>
             <div classhame="nav">
                 <ul className="flex items-center font-semibold space-x-6 md:text-base">
-                    <Link href="/tshirts"><li>Tshirts</li></Link>
-                    <Link href="/hoodies"><li>Hoodies</li></Link>
-                    <Link href="/stickers"><li>Stickers</li></Link>
-                    <Link href="/mugs"><li>Mugs</li></Link>
+                    <Link href="/tshirts" className="hover:text-pink-600"><li>Tshirts</li></Link>
+                    <Link href="/hoodies" className="hover:text-pink-600"><li>Hoodies</li></Link>
+                    <Link href="/stickers" className="hover:text-pink-600"><li>Stickers</li></Link>
+                    <Link href="/mugs" className="hover:text-pink-600"><li>Mugs</li></Link>
                 </ul>
             </div>
             <div className="flex absolute right-0 top-6 md:top-4 mx-3 md:mx-5">
@@ -47,11 +47,11 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
                             return (
                                 <li className="my-3" key={itemCode}>
                                     <div className="item flex">
-                                        <div className="w-2/3 sm:w-3/4 pr-2">{item.name}</div>
+                                        <div className="w-2/3 sm:w-3/4 pr-2">{item.name}({item.size}/{item.variant})</div>
                                         <div className="flex items-center justify-center text-lg w-1/3 sm:w-1/4 space-x-3">
                                             <AiFillMinusCircle onClick={() => removeFromCart(itemCode, 1)} className="cursor-pointer text-pink-500" />
                                             <span className="quantity">{item.quantity}</span>
-                                            <AiFillPlusCircle onClick={() => addToCart(itemCode, item.name, item.price, 1, item.size, item.variant)} className="cursor-pointer text-pink-500" />
+                                            <AiFillPlusCircle onClick={() => addToCart(itemCode, item.name, item.image, item.price, 1, item.size, item.variant)} className="cursor-pointer text-pink-500" />
                                         </div>
                                     </div>
                                 </li>
