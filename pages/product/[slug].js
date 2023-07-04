@@ -136,7 +136,7 @@ const Slug = ({ addToCart, buyNow, product, variants }) => {
                             </div>
                         </div>
                         <div className="flex items-center">
-                            <span className="title-font font-medium text-2xl text-gray-900">&#8377;499</span>
+                            <span className="title-font font-medium text-2xl text-gray-900">&#8377;{product.price}</span>
                             <button onClick={() => buyNow(slug, product.title, product.image, product.price, 1, size, color)} className="flex items-center ml-auto xl:ml-20 text-white bg-pink-500 border-0 py-1.5 md:py-2 px-2 md:px-6 focus:outline-none hover:bg-pink-600 rounded text-sm md:text-base">Buy Now</button>
                             <button onClick={() => addToCart(slug, product.title, product.image, product.price, 1, size, color)} className="flex items-center ml-2 xl:ml-4 text-white bg-pink-500 border-0 py-1.5 md:py-2 px-2 md:px-6 focus:outline-none hover:bg-pink-600 rounded text-sm md:text-base">Add to Cart</button>
                             <button className="rounded-full w-9 md:w-10 h-9 md:h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-2 xl:ml-4">
@@ -176,7 +176,7 @@ export async function getServerSideProps(context) {
     }
 
     let product = await Product.findOne({ slug: context.query.slug })
-    let variants = await Product.find({ title: product.title })
+    let variants = await Product.find({ title: product.title, category: product.category })
     let colorSizeSlug = {}
 
     for (const item of variants) {
