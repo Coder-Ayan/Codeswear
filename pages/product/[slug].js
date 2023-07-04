@@ -2,8 +2,10 @@ import { useRouter } from 'next/router'
 import { useState } from 'react'
 import mongoose from 'mongoose'
 import Product from '../../models/Product'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-const Slug = ({ addToCart, product, variants }) => {
+const Slug = ({ addToCart, buyNow, product, variants }) => {
     const router = useRouter()
     const { slug } = router.query
     const [pin, setPin] = useState('')
@@ -19,8 +21,12 @@ const Slug = ({ addToCart, product, variants }) => {
 
         if (pins.includes(parseInt(pin))) {
             setServiceable(true)
+            toast.success('Your pincode is serviceable!')
         }
-        else setServiceable(false)
+        else {
+            setServiceable(false)
+            toast.error('Sorry, your pincode is not serviceable!')
+        }
     }
 
     const [color, setColor] = useState(product.color)
@@ -39,6 +45,18 @@ const Slug = ({ addToCart, product, variants }) => {
 
     return (
         <section className="text-gray-600 body-font overflow-hidden">
+            <ToastContainer
+                position="bottom-center"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
             <div className="container px-5 py-16 mx-auto">
                 <div className="lg:w-5/6 mx-auto flex flex-wrap">
                     <div className="lg:w-1/2 w-full">
@@ -119,7 +137,7 @@ const Slug = ({ addToCart, product, variants }) => {
                         </div>
                         <div className="flex items-center">
                             <span className="title-font font-medium text-2xl text-gray-900">&#8377;499</span>
-                            <button className="flex items-center ml-auto xl:ml-20 text-white bg-pink-500 border-0 py-1.5 md:py-2 px-2 md:px-6 focus:outline-none hover:bg-pink-600 rounded text-sm md:text-base">Buy Now</button>
+                            <button onClick={() => buyNow(slug, product.title, product.image, product.price, 1, size, color)} className="flex items-center ml-auto xl:ml-20 text-white bg-pink-500 border-0 py-1.5 md:py-2 px-2 md:px-6 focus:outline-none hover:bg-pink-600 rounded text-sm md:text-base">Buy Now</button>
                             <button onClick={() => addToCart(slug, product.title, product.image, product.price, 1, size, color)} className="flex items-center ml-2 xl:ml-4 text-white bg-pink-500 border-0 py-1.5 md:py-2 px-2 md:px-6 focus:outline-none hover:bg-pink-600 rounded text-sm md:text-base">Add to Cart</button>
                             <button className="rounded-full w-9 md:w-10 h-9 md:h-10 bg-gray-200 p-0 border-0 inline-flex items-center justify-center text-gray-500 ml-2 xl:ml-4">
                                 <svg fill="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} className="w-5 h-5" viewBox="0 0 24 24">

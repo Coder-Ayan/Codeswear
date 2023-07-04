@@ -40,6 +40,14 @@ function MyApp({ Component, pageProps }) {
 		saveSubTotal(newCart)
 	}
 
+	const buyNow = (itemCode, name, image, price, quantity, size, variant) => {
+		let newCart = {}
+		newCart[itemCode] = { name, image, price, quantity, size, variant }
+		setCart(newCart)
+		saveCart(newCart)
+		router.push('/checkout')
+	}
+
 	const addToCart = (itemCode, name, image, price, quantity, size, variant) => {
 		let newCart = cart
 		if (itemCode in cart) {
@@ -71,9 +79,9 @@ function MyApp({ Component, pageProps }) {
 	return (
 		<>
 			{showHeaderAndFooter && <Navbar cart={cart} addToCart={addToCart} removeFromCart={removeFromCart}
-				clearCart={clearCart} subTotal={subTotal} />}
+				clearCart={clearCart} buyNow={buyNow} subTotal={subTotal} />}
 			<Component {...pageProps} cart={cart} addToCart={addToCart} removeFromCart={removeFromCart}
-				clearCart={clearCart} subTotal={subTotal} />
+				clearCart={clearCart} buyNow={buyNow} subTotal={subTotal} />
 			{showHeaderAndFooter && <Footer />}
 		</>
 	)
