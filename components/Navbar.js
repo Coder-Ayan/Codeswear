@@ -33,7 +33,7 @@ const Navbar = ({ cart, addToCart, removeFromCart, clearCart, subTotal }) => {
                 </ul>
             </div>
             <div className="flex absolute right-0 top-6 md:top-4 mx-3 md:mx-5">
-                <Link href="/login"><MdLogin className="cursor-pointer text-xl md:text-3xl text-pink-500 mr-2" /></Link>
+                <Link href="/login"><MdLogin className="cursor-pointer text-xl md:text-3xl text-pink-500 mr-2 md:mr-5" /></Link>
                 <AiOutlineShoppingCart onClick={toggleCart} className="cursor-pointer text-xl md:text-3xl text-pink-500" />
             </div>
             <div ref={Cart} className={`sideCart fixed top-0 right-0 bg-pink-50 py-10 px-8 w-[18rem] sm:w-[22rem] h-screen rounded transform transition-transform ${Object.keys(cart).length === 0 ? 'translate-x-full' : 'translate-x-0'}`}>

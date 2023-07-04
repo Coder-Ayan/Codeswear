@@ -1,12 +1,13 @@
 import User from '../../models/User'
 import connectToMongoDB from '../../middlewares/connectToMongoDB'
+import CryptoJS from 'crypto-js'
 
 const handler = async (req, res) => {
     if (req.method === 'POST') {
         let newUser = new User({
             name: req.body.name,
             email: req.body.email,
-            password: req.body.password
+            password: CryptoJS.AES.encrypt(req.body.password, 'secret123').toString()
         })
         await newUser.save()
 
