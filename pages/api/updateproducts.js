@@ -6,7 +6,7 @@ const handler = async (req, res) => {
         for (let i = 0; i < req.body.length; i++) {
             await Product.findByIdAndUpdate(req.body[i]._id, req.body[i])
         }
-        return res.status(201).json({ message: "Product(s) updated successfully" });
+        return res.status(200).json({ message: "Product(s) updated successfully" });
     } else {
         return res.status(405).json({ error: "Method Not Allowed", allow: ['PUT'] });
     }
