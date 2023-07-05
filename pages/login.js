@@ -27,6 +27,7 @@ const login = () => {
         setPassword('')
 
         if (responseData.success) {
+            localStorage.setItem('token', responseData.token)
             toast.success("Logged in successfully!");
             setTimeout(() => {
                 router.push('/')

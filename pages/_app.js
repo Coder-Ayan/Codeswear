@@ -19,7 +19,6 @@ function MyApp({ Component, pageProps }) {
 				saveSubTotal(newCart)
 			}
 		} catch (error) {
-			console.log("error")
 			console.error(error);
 			localStorage.clear()
 		}
