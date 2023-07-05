@@ -1,7 +1,16 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
 const forgotpassword = () => {
+    const router = useRouter()
+    useEffect(() => {
+        if (localStorage.getItem('token')) {
+            router.push('/')
+        }
+    }, [])
+
     return (
         <section className="bg-gray-50">
             <div className="flex flex-col items-center justify-center px-3 md:px-6 py-8 mx-auto md:h-screen lg:py-0">

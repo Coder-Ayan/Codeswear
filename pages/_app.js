@@ -2,7 +2,8 @@ import '../styles/globals.css'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/router'
+import LoadingBar from 'react-top-loading-bar'
 
 function MyApp({ Component, pageProps }) {
 	const router = useRouter();
@@ -10,8 +11,18 @@ function MyApp({ Component, pageProps }) {
 
 	const [cart, setCart] = useState({})
 	const [subTotal, setSubTotal] = useState(0)
+	const [user, setUser] = useState({ value: null })
+	const [key, setKey] = useState(0)
+	const [progress, setProgress] = useState(0)
 
 	useEffect(() => {
+		router.events.on('routeChangeStart', () => {
+			setProgress(40)
+		})
+		router.events.on('routeChangeComplete', () => {
+			setProgress(100)
+		})
+
 		try {
 			if (localStorage.getItem("cart")) {
 				let newCart = JSON.parse(localStorage.getItem("cart"))
@@ -22,7 +33,13 @@ function MyApp({ Component, pageProps }) {
 			console.error(error);
 			localStorage.clear()
 		}
-	}, [])
+
+		const token = localStorage.getItem('token')
+		if (token) {
+			setUser({ value: token })
+			setKey(Math.random())
+		}
+	}, [router.query])
 
 	const saveSubTotal = (newCart) => {
 		let subtotal = 0
@@ -75,9 +92,21 @@ function MyApp({ Component, pageProps }) {
 		saveCart(newCart)
 	}
 
+	const logout = () => {
+		localStorage.removeItem('token')
+		setUser({ value: null })
+	}
+
 	return (
 		<>
-			{showHeaderAndFooter && <Navbar cart={cart} addToCart={addToCart} removeFromCart={removeFromCart}
+			<LoadingBar
+				color='#EC4899'
+				progress={progress}
+				waitingTime={300}
+				onLoaderFinished={() => setProgress(0)}
+				height={3}
+			/>
+			{showHeaderAndFooter && <Navbar key={key} user={user} logout={logout} cart={cart} addToCart={addToCart} removeFromCart={removeFromCart}
 				clearCart={clearCart} buyNow={buyNow} subTotal={subTotal} />}
 			<Component {...pageProps} cart={cart} addToCart={addToCart} removeFromCart={removeFromCart}
 				clearCart={clearCart} buyNow={buyNow} subTotal={subTotal} />
