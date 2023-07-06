@@ -19,7 +19,7 @@ const login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         let data = { email, password }
-        let response = await fetch("http://localhost:3000/api/login", {
+        let response = await fetch(`${process.env.HOST}/api/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

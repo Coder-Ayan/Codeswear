@@ -16,7 +16,7 @@ const Slug = ({ addToCart, buyNow, product, variants }) => {
     }
 
     const checkServiceability = async () => {
-        let response = await fetch("http://localhost:3000/api/pincode")
+        let response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pincode`)
         let pins = await response.json()
 
         if (pins.includes(parseInt(pin))) {
@@ -35,9 +35,9 @@ const Slug = ({ addToCart, buyNow, product, variants }) => {
     const refreshVariant = (newcolor, newsize) => {
         let url
         if (variants[newcolor][newsize]) {
-            url = `http://localhost:3000/product/${variants[newcolor][newsize].slug}`
+            url = `${process.env.NEXT_PUBLIC_HOST}/product/${variants[newcolor][newsize].slug}`
         } else {
-            url = `http://localhost:3000/product/${variants[newcolor][Object.keys(variants[newcolor])[0]].slug}`
+            url = `${process.env.NEXT_PUBLIC_HOST}/product/${variants[newcolor][Object.keys(variants[newcolor])[0]].slug}`
         }
 
         window.location = url

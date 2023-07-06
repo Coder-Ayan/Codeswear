@@ -95,6 +95,7 @@ function MyApp({ Component, pageProps }) {
 	const logout = () => {
 		localStorage.removeItem('token')
 		setUser({ value: null })
+		router.push('/')
 	}
 
 	return (
