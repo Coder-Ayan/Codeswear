@@ -1,9 +1,58 @@
 import { HiMiniTrash } from 'react-icons/hi2';
 import { AiFillPlusCircle, AiFillMinusCircle } from 'react-icons/ai';
+import Head from 'next/head';
+import Script from 'next/script';
 
 const checkout = ({ cart, addToCart, removeFromCart, subTotal }) => {
+    const initiatePayment = async e => {
+        e.preventDefault();
+        let oid = Math.floor(Math.random() * Date.now());
+        // Get a transaction token
+        const data = { cart, subTotal, oid, email: 'email' }
+        let response = await fetch(`${process.env.NEXT_PUBLIC_HOST}/api/pretransaction`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+
+        let responseData = await response.json();
+        let txnToken = responseData.txnToken;
+        console.log(txnToken)
+
+        let config = {
+            "root": "",
+            "flow": "DEFAULT",
+            "data": {
+                "orderId": oid, /* update order id */
+                "token": txnToken, /* update token value */
+                "tokenType": "TXN_TOKEN",
+                "amount": subTotal /* update amount */
+            },
+            "handler": {
+                "notifyMerchant": function (eventName, data) {
+                    console.log("notifyMerchant handler function called");
+                    console.log("eventName => ", eventName);
+                    console.log("data => ", data);
+                }
+            }
+        };
+
+        window.Paytm.CheckoutJS.init(config).then(function onSuccess() {
+            // after successfully updating configuration, invoke JS Checkout
+            window.Paytm.CheckoutJS.invoke();
+        }).catch(function onError(error) {
+            console.log("error => ", error);
+        });
+    }
+
     return (
         <>
+            <Head>
+                <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0" />
+            </Head>
+            <Script type="application/javascript" src={`${process.env.NEXT_PUBLIC_PAYTM_HOST}/merchantpgpui/checkoutjs/merchants/${process.env.NEXT_PUBLIC_PAYTM_MID}.js`} crossorigin="anonymous" />
             <div className="mt-10">
                 <h1 className="flex items-center justify-center font-bold text-pink-600 text-3xl">Checkout</h1>
             </div>
@@ -53,7 +102,7 @@ const checkout = ({ cart, addToCart, removeFromCart, subTotal }) => {
                                     (Optional)</label><textarea name="note" className="flex items-center w-full px-4 py-3 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-pink-500" rows={4} placeholder="Notes for delivery" defaultValue={""} />
                                 </div>
                                 <div className="mt-4">
-                                    <button className="w-full px-6 py-2 rounded text-white bg-pink-500 hover:bg-pink-600">Process</button>
+                                    <button onClick={initiatePayment} className="w-full px-6 py-2 rounded text-white bg-pink-500 hover:bg-pink-600">Pay &#8377;{subTotal}</button>
                                 </div>
                             </div>
                         </form>
@@ -95,17 +144,14 @@ const checkout = ({ cart, addToCart, removeFromCart, subTotal }) => {
                                     }
                                 </div>
                             </div>
-                            <div className="flex p-4 mt-4">
-                                <h2 className="text-xl font-bold">ITEMS 2</h2>
-                            </div>
-                            <div className="flex items-center justify-between w-full py-4 text-base font-medium text-gray-600lg:py-5 lg:px-3 text-heading">
+                            {/* <div className="flex items-center justify-between w-full py-4 text-base font-medium text-gray-600lg:py-5 lg:px-3 text-heading">
                                 Subtotal <span className="ml-2">&#8377;{subTotal}</span>
                             </div>
                             <div className="flex items-center justify-between w-full py-4 text-base font-medium text-gray-600lg:py-5 lg:px-3 text-heading">
                                 Shipping Tax <span className="ml-2">&#8377;{Object.keys(cart).length !== 0 ? 50 : 0}</span>
-                            </div>
-                            <div className="flex items-center justify-between w-full py-4 mt-2 text-lg font-semibold border-t border-gray-300 lg:py-5 lg:px-3">
-                                Total <span className="ml-2">&#8377;{subTotal + (Object.keys(cart).length !== 0 ? 50 : 0)}</span>
+                            </div> */}
+                            <div className="flex items-center justify-between w-full py-4 mt-5 text-lg font-semibold border-t border-gray-300 lg:py-5 lg:px-3">
+                                Total <span className="ml-2">&#8377;{subTotal}</span>
                             </div>
                         </div>
                     </div>

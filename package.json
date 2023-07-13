@@ -13,6 +13,7 @@
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.3.1",
     "next": "13.4.7",
+    "paytmchecksum": "^1.5.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-icons": "^4.10.1",
